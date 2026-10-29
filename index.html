@@ -19,9 +19,9 @@ h1{margin:0 0 6px;font-size:1.6rem;line-height:1.2}
 .hero .big{font-size:4.2rem;font-weight:800;letter-spacing:2px;margin:6px 0 4px}
 .rules{display:grid;gap:10px;margin:20px 0;text-align:left}
 .rules div{background:var(--bg);border-radius:14px;padding:10px 14px;font-size:.95rem}
-button{font:inherit;border:0;cursor:pointer;transition:transform .12s,box-shadow .12s,opacity .2s}
+button{-webkit-tap-highlight-color:transparent;outline:none;font:inherit;border:0;cursor:pointer;transition:transform .12s,box-shadow .12s,opacity .2s}
 .primary{background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff;font-weight:700;border-radius:14px;padding:13px 30px;box-shadow:0 6px 18px rgba(91,91,214,.35)}
-.primary:hover{transform:translateY(-2px)}
+@media(hover:hover) and (pointer:fine){.primary:hover{transform:translateY(-2px)}}
 @media(prefers-color-scheme:dark){.primary{color:#14152a}}
 .top{display:flex;justify-content:space-between;align-items:center;font-size:.92rem;color:var(--mut);margin-bottom:10px}
 .dots{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:22px}
@@ -38,7 +38,7 @@ button{font:inherit;border:0;cursor:pointer;transition:transform .12s,box-shadow
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
 .opt{background:var(--bg);color:var(--tx);border:2px solid var(--bd);border-radius:18px;padding:16px 8px;font-size:2rem;font-weight:800}
 .opt small{display:block;font-size:.75rem;font-weight:500;color:var(--mut)}
-.opt:hover:not(:disabled){transform:translateY(-3px);border-color:var(--ac);box-shadow:0 8px 20px rgba(91,91,214,.2)}
+@media(hover:hover) and (pointer:fine){.opt:hover:not(:disabled){transform:translateY(-3px);border-color:var(--ac);box-shadow:0 8px 20px rgba(91,91,214,.2)}}
 .opt:disabled{cursor:default;opacity:.55}
 .opt.right{opacity:1;border-color:var(--ok);background:var(--okbg);color:var(--ok)}
 .opt.wrong{opacity:1;border-color:var(--no);background:var(--nobg);color:var(--no)}
@@ -63,7 +63,7 @@ button{font:inherit;border:0;cursor:pointer;transition:transform .12s,box-shadow
 .st-t{font-weight:700;margin-bottom:12px}
 .sopts{display:grid;gap:10px}
 .sopt{background:var(--card);color:var(--tx);border:2px solid var(--bd);border-radius:14px;padding:12px 14px;text-align:left;font-size:1rem;font-weight:600}
-.sopt:hover:not(:disabled){border-color:var(--ac);transform:translateX(3px)}
+@media(hover:hover) and (pointer:fine){.sopt:hover:not(:disabled){border-color:var(--ac);transform:translateX(3px)}}
 .sopt.wrong{border-color:var(--no);background:var(--nobg);color:var(--no);animation:shake .4s}
 .sm{color:var(--no);font-size:.92rem;margin-top:10px}
 .tip{background:var(--bg);border-left:4px solid var(--ac);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:.95rem}
@@ -77,6 +77,7 @@ kbd{font:inherit;font-size:.75rem;background:var(--bd);color:var(--mut);border-r
 .alg{padding-left:20px}.alg li{margin:10px 0;font-size:.97rem}
 .ex{background:var(--bg);border-radius:12px;padding:10px 14px;margin:10px 0;font-size:.9rem}
 .sopt small{display:block;font-weight:500;color:var(--mut);font-size:.82rem;margin-left:34px}
+.sopt.shk{animation:shake .4s}
 </style>
 </head>
 <body>
@@ -162,7 +163,7 @@ function draw(){
   p.innerHTML=`<div class="step"><div class="st-t">${s.t}</div><div class="sopts">${s.o.map((o,k)=>`<button class="sopt" data-v="${o[0]}"><kbd>${k+1}</kbd> ${o[1]}${o[2]?`<small>${o[2]}</small>`:''}</button>`).join('')}</div><div class="sm" id="sm"></div></div>`;
   p.querySelectorAll('.sopt').forEach(b=>b.onclick=()=>step(b));
  }else{
-  p.innerHTML=`${guided?`<div class="tip">🧭 ${hint(q)}</div>`:''}<div class="opts">
+  p.innerHTML=`<div class="opts">
   <button class="opt" data-n="1"><kbd>1</kbd> н<small>одна буква</small></button>
   <button class="opt" data-n="2"><kbd>2</kbd> нн<small>две буквы</small></button></div>`;
   p.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(+b.dataset.n));
@@ -170,7 +171,7 @@ function draw(){
 }
 function step(b){const s=S[st];
  if([].concat(s.c).includes(b.dataset.v)){st++;draw()}
- else{b.disabled=true;b.classList.add('wrong');document.getElementById('sm').innerHTML='Подумайте ещё: '+s.h}}
+ else{b.classList.remove('shk');void b.offsetWidth;b.classList.add('shk')}}
 function pick(n){
  if(locked)return;locked=true;
  const q=qs[i],ok=n===q[2];
